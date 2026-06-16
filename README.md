@@ -21,3 +21,8 @@
 ## How to run locally
 
 ### Backend
+
+## Live Links
+
+Frontend: https://your-vercel-url.vercel.app  
+Backend: https://blogplatform-eprb.onrender.com
