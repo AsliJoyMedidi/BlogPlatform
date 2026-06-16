@@ -2,28 +2,47 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
+
 const authRoutes = require("./routes/authRoutes");
 const postRoutes = require("./routes/postRoutes");
 const commentRoutes = require("./routes/commentRoutes");
 
 dotenv.config();
-console.log("MONGO_URI =", process.env.MONGO_URI);
+
 const app = express();
 
-app.use(cors());
+/* ---------------- MIDDLEWARE ---------------- */
+
+// Allow frontend (Vercel + localhost)
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
+
+/* ---------------- ROUTES ---------------- */
+
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 
+/* ---------------- HEALTH CHECK ---------------- */
+
+app.get("/", (req, res) => {
+  res.send("Blog Platform API Running 🚀");
+});
+
+/* ---------------- DB CONNECTION ---------------- */
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
+  .catch((err) => console.log("Mongo Error:", err));
 
-app.get("/", (req, res) => {
-  res.send("Blog Platform API Running");
-});
+/* ---------------- START SERVER ---------------- */
 
 const PORT = process.env.PORT || 5000;
 
